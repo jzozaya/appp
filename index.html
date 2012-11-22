@@ -1,0 +1,173 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no, maximum-scale=1">
+<title>jQuery Mobile Web App</title>
+<link href="jquery-mobile/jquery.mobile-1.2.0.min.css" rel="stylesheet" type="text/css"/>
+<link rel="stylesheet" type="text/css" href="sty.css">
+<script src="jquery-mobile/jquery-1.8.2.min.js" type="text/javascript"></script>
+<script src="jquery-mobile/jquery.mobile-1.2.0.min.js" type="text/javascript"></script>
+<script type="text/javascript">
+
+
+    $(document).bind('pageinit', function(){
+
+      var canvas = document.getElementById('container');
+      var salario = parseInt($("#s2").val());
+      var dotsEdad = []; 
+      var inicio = 5;
+       for(var q=0; q<40; q++){  // define los puntos en la recta de la edad x
+        dotsEdad.push(inicio);
+        inicio = inicio+6.3;
+        }
+      var longitud = dotsEdad.length;
+      var dotsMoney = []; 
+      var va = 120;
+      var dec = 1;
+      for(var i=0; i<40; i++){    // define los puntos en y para el crecimiento de el ingreso
+               dotsMoney.push(va);
+               va = va - dec;
+          if(i > 25){
+                dec = dec * 1.048;
+               }
+               dec = dec * 1.035;
+               }
+        
+      
+
+$("#sub").click(function() {
+     Draw();
+     okEdad();
+     });    
+
+$(".slide").on('slidestop', function() { 
+        
+        });
+
+$("#reload").on('click', function(){
+      reloader();
+
+   });
+function reloader(){
+
+  location.reload();
+}
+
+function Draw(){
+  var ctx = canvas.getContext('2d');    
+    ctx.beginPath();
+    ctx.moveTo(3, 144);
+    ctx.lineTo(294, 144);
+    ctx.lineWidth = 1;
+    ctx.strokeStyle = '#fafafa';
+    ctx.stroke();
+
+    var ctx3 = canvas.getContext('2d');
+    ctx3.beginPath();
+    ctx3.moveTo(5, 147);
+    ctx3.lineTo(5, 4);
+    ctx3.lineWidth = 1;
+    ctx3.strokeStyle = '#fafafa';
+    ctx3.stroke();
+
+    // edad
+    // Gráfica verde +++++++++++++++
+
+    var ctx2 = canvas.getContext('2d');   //salario
+    
+    ctx2.beginPath();
+
+    for(var h=0; h < dotsEdad.length; h++){
+     ctx2.arc(dotsEdad[h], dotsMoney[h],1,0,2*Math.PI);
+        //console.log(dotsMoney[h]);
+    }
+    ctx2.arc(dotsEdad[longitud-1], 144,0,0,2*Math.PI);  // es para que gráfique a cero  longitu-1
+    ctx2.lineWidth = 2;
+    ctx2.strokeStyle = '#5ada3b';
+    ctx2.stroke();
+    // +++++++++++++++++++++  Azul
+
+
+    var ctx4 = canvas.getContext('2d');
+    ctx4.beginPath();
+
+    for(var h=0; h < dotsEdad.length; h++){
+        ctx2.arc(dotsEdad[h], dotsMoney[h],1,0,2*Math.PI);
+    }
+    ctx4.lineWidth = 2;
+    ctx4.strokeStyle = '#1e4897';
+    //ctx4.stroke();
+
+}
+
+function okEdad(){
+   var edad = parseInt($("#s1").val());
+   var ctxEdad = canvas.getContext('2d'); 
+        //ctxEdad.fillRect(0,0,canvas.width, canvas.height);  borra todo
+        ctxEdad.beginPath();
+
+        edad = edad-25;
+        edad = (edad*6.3)+5;
+        ctxEdad.moveTo(edad, 147);
+        ctxEdad.lineTo(edad, 4);
+        ctxEdad.lineWidth = 1;
+        ctxEdad.strokeStyle = '#5ada3b';
+        ctxEdad.stroke();
+
+}
+    
+});
+    
+</script>
+</head> 
+<body data-theme="a"> 
+<script src="highcharts.js"></script>
+<script src="exporting.js"></script>
+
+<div data-role="page" id="page" data-theme="a">
+    <div data-role="header" data-theme="c" id="header">
+        <img src="logo.png" style="padding-top:5px; padding-left:50%;">
+    </div>
+    <div data-role="content" data-theme="a" >    
+       <!--
+       <div id="back" style="position:relative; top:50px; background-color:blue; width:500px; height: 200px; z-index:10;"></div>
+   -->
+     <img src="app.png" style="position:absolute; padding-top:10px;">
+
+        <canvas id="container"></canvas>
+
+     <ul >
+        <li>25</li>
+        <li>30</li>
+        <li>35</li>
+        <li>40</li>
+        <li>45</li>
+        <li>50</li>
+        <li>55</li>
+        <li>60</li>
+        <li>65</li>
+     </ul>
+
+</div>
+    <div data-role="footer">
+
+      <div data-role="fieldcontain" style="padding-left:20px;">
+  <label for="s1">Edad:</label>
+  <input type="range" class="slide" data-theme="a" id="s1" name="s1" value="0" min="25" max="65" data-highlight="true"  /><br><br>
+  <label for="s2">Salario:</label>
+  <input type="range" class="slide" data-theme="a" id="s2" mane="s2" value="0" min="5000" max="100000" data-highlight="true"  /><br><br>
+
+   <input type="button"  value="ok" id="sub" data-inline="true">
+   <input type="button"  value="reload" id="reload" data-inline="true">  
+</div>
+        
+           
+
+
+
+           
+    </div>
+</div>
+</body>
+</html>
